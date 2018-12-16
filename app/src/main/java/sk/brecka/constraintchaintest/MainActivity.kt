@@ -6,12 +6,21 @@ import android.support.constraint.ConstraintLayout
 import android.support.constraint.ConstraintSet
 import android.support.v7.app.AppCompatActivity
 import android.transition.ChangeBounds
+import android.transition.Transition
 import android.transition.TransitionManager
 import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.OvershootInterpolator
 import android.widget.Switch
 import android.widget.TextView
+
+open class TransitionAdapter : Transition.TransitionListener {
+    override fun onTransitionEnd(transition: Transition?) {}
+    override fun onTransitionResume(transition: Transition?) {}
+    override fun onTransitionPause(transition: Transition?) {}
+    override fun onTransitionCancel(transition: Transition?) {}
+    override fun onTransitionStart(transition: Transition?) {}
+}
 
 class MainActivity : AppCompatActivity() {
 
@@ -56,6 +65,7 @@ class MainActivity : AppCompatActivity() {
 private fun foo(view: View, @IdRes anchorId: Int, isChecked: Boolean, overshoot: Boolean = true) {
     val parent = view.parent as ConstraintLayout
     val viewId = view.id
+
     ConstraintSet().apply {
         clone(parent)
         if (isChecked) {
@@ -67,5 +77,16 @@ private fun foo(view: View, @IdRes anchorId: Int, isChecked: Boolean, overshoot:
         }
     }.applyTo(parent)
 
-    TransitionManager.beginDelayedTransition(parent, ChangeBounds().apply { interpolator = if (overshoot) OvershootInterpolator() else AccelerateDecelerateInterpolator() })
+    val transition = ChangeBounds().apply {
+        interpolator = if (overshoot) OvershootInterpolator() else AccelerateDecelerateInterpolator()
+        addListener(object : TransitionAdapter() {
+            override fun onTransitionEnd(transition: Transition?) {
+                view.animate()
+                        .alpha(if (isChecked) 0.5f else 1.0f)
+                        .start()
+            }
+        })
+    }
+
+    TransitionManager.beginDelayedTransition(parent, transition)
 }
