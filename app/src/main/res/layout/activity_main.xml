@@ -8,12 +8,20 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+    <!--blue-->
+    <android.support.constraint.Barrier
+        android:id="@+id/beforeBlueBarrier"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="bottom"
+        app:constraint_referenced_ids="greenTextView, beforeGreenBarrier"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
 
     <TextView
         android:id="@+id/blueTextView"
         android:layout_width="200dp"
-        android:layout_height="wrap_content"
-        android:layout_margin="8dp"
+        android:layout_height="32dp"
         android:background="#0000ff"
         android:gravity="center"
         android:text="BLUE"
@@ -21,13 +29,22 @@
         android:textSize="22sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/greenTextView"/>
+        app:layout_constraintTop_toBottomOf="@id/beforeBlueBarrier"/>
+
+    <!--green-->
+    <android.support.constraint.Barrier
+        android:id="@+id/beforeGreenBarrier"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="bottom"
+        app:constraint_referenced_ids="redTextView, beforeRedBarrier"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
 
     <TextView
         android:id="@+id/greenTextView"
         android:layout_width="200dp"
-        android:layout_height="wrap_content"
-        android:layout_margin="8dp"
+        android:layout_height="64dp"
         android:background="#00ff00"
         android:gravity="center"
         android:text="GREEN"
@@ -35,13 +52,23 @@
         android:textSize="22sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/redTextView"/>
+        app:layout_constraintTop_toBottomOf="@id/beforeGreenBarrier"/>
+
+    <!--red-->
+    <android.support.constraint.Barrier
+        android:id="@+id/beforeRedBarrier"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:barrierDirection="bottom"
+        app:constraint_referenced_ids="dummy"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <TextView
         android:id="@+id/redTextView"
         android:layout_width="200dp"
-        android:layout_height="wrap_content"
-        android:layout_margin="8dp"
+        android:layout_height="48dp"
         android:background="#ff0000"
         android:gravity="center"
         android:text="RED"
@@ -49,7 +76,14 @@
         android:textSize="22sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toBottomOf="@id/beforeRedBarrier"/>
+
+    <!--dummy view so the uppermost barrier can work-->
+    <View
+        android:id="@+id/dummy"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="parent"/>
 
     <!---->
     <Switch
@@ -85,14 +119,5 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"/>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
 
 </android.support.constraint.ConstraintLayout>

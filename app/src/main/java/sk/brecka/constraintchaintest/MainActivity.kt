@@ -1,10 +1,15 @@
 package sk.brecka.constraintchaintest
 
 import android.os.Bundle
+import android.support.annotation.IdRes
 import android.support.constraint.ConstraintLayout
+import android.support.constraint.ConstraintSet
 import android.support.v7.app.AppCompatActivity
+import android.transition.ChangeBounds
 import android.transition.TransitionManager
 import android.view.View
+import android.view.animation.AccelerateDecelerateInterpolator
+import android.view.animation.OvershootInterpolator
 import android.widget.Switch
 import android.widget.TextView
 
@@ -35,18 +40,32 @@ class MainActivity : AppCompatActivity() {
         blueSwitch = findViewById(R.id.blueSwitch)
 
         redSwitch.setOnCheckedChangeListener { _, isChecked ->
-            redTextView.visibility = if (isChecked) View.VISIBLE else View.GONE
-            TransitionManager.beginDelayedTransition(constraintLayout)
+            foo(redTextView, R.id.beforeRedBarrier, isChecked)
         }
 
         greenSwitch.setOnCheckedChangeListener { _, isChecked ->
-            greenTextView.visibility = if (isChecked) View.VISIBLE else View.GONE
-            TransitionManager.beginDelayedTransition(constraintLayout)
+            foo(greenTextView, R.id.beforeGreenBarrier, isChecked)
         }
 
         blueSwitch.setOnCheckedChangeListener { _, isChecked ->
-            blueTextView.visibility = if (isChecked) View.VISIBLE else View.GONE
-            TransitionManager.beginDelayedTransition(constraintLayout)
+            foo(blueTextView, R.id.beforeBlueBarrier, isChecked)
         }
     }
+}
+
+private fun foo(view: View, @IdRes anchorId: Int, isChecked: Boolean, overshoot: Boolean = true) {
+    val parent = view.parent as ConstraintLayout
+    val viewId = view.id
+    ConstraintSet().apply {
+        clone(parent)
+        if (isChecked) {
+            clear(viewId, ConstraintSet.BOTTOM)
+            connect(viewId, ConstraintSet.TOP, anchorId, ConstraintSet.BOTTOM)
+        } else {
+            clear(viewId, ConstraintSet.TOP)
+            connect(viewId, ConstraintSet.BOTTOM, anchorId, ConstraintSet.TOP)
+        }
+    }.applyTo(parent)
+
+    TransitionManager.beginDelayedTransition(parent, ChangeBounds().apply { interpolator = if (overshoot) OvershootInterpolator() else AccelerateDecelerateInterpolator() })
 }
